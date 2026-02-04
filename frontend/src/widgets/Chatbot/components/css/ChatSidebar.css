@@ -1,0 +1,128 @@
+/* 사이드바 컨테이너 */
+.chat-sidebar {
+    width: 240px; 
+    /* 🔥 하드코딩 색상 제거 -> 변수 적용 */
+    background-color: var(--bg-sidebar); 
+    border-right: 1px solid var(--border-color);
+    display: flex; flex-direction: column;
+    padding: 16px;
+    height: 100%; 
+    color: var(--text-primary); /* 텍스트 색상 변수 */
+    transition: background-color 0.3s, border-color 0.3s; /* 부드러운 전환 */
+}
+
+.new-chat-btn {
+    width: 100%; margin-right: 0; padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white; border: none; border-radius: 8px;
+    font-weight: 700; font-size: 12px;
+    cursor: pointer; margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    display: flex; justify-content: center; align-items: center;
+}
+
+.session-list-header {
+    font-size: 11px; 
+    color: var(--text-secondary); /* 변수 적용 */
+    font-weight: 700; margin-bottom: 8px; padding-left: 4px;
+}
+
+/* 스크롤바 */
+.session-list { flex: 1; overflow-y: auto; padding-right: 2px; }
+.session-list::-webkit-scrollbar { width: 4px; }
+/* 스크롤바 색상도 테마에 맞게 미세 조정 (반투명 사용) */
+.session-list::-webkit-scrollbar-thumb { 
+    background: rgba(128, 128, 128, 0.3); 
+    border-radius: 4px; 
+}
+
+/* 세션 아이템 */
+.session-item {
+    position: relative;
+    padding: 10px 12px; margin-bottom: 4px;
+    border-radius: 8px; cursor: pointer;
+    color: var(--text-secondary); /* 변수 적용 */
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; transition: background 0.2s, color 0.2s;
+}
+.session-item:hover { 
+    background-color: var(--bg-input-field); /* 호버 시 밝은/어두운 배경 */
+    color: var(--text-primary); 
+}
+.session-item.active {
+    background-color: var(--bg-input-field);
+    border-left: 3px solid #667eea;
+    color: var(--text-primary); font-weight: 600;
+}
+
+.session-icon { margin-right: 8px; opacity: 0.8; font-size: 12px; }
+.session-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 6px; }
+.empty-session { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 20px; }
+
+/* 메뉴 버튼 & 팝업 */
+.session-menu-wrapper { position: relative; }
+
+.menu-trigger-btn {
+    background: transparent; border: none;
+    color: var(--text-secondary);
+    font-size: 14px; cursor: pointer; padding: 0 4px; border-radius: 4px;
+    opacity: 0; transition: opacity 0.2s;
+}
+.session-item:hover .menu-trigger-btn, .menu-trigger-btn:focus { opacity: 1; }
+.menu-trigger-btn:hover { 
+    background-color: var(--bg-input); 
+    color: var(--text-primary); 
+}
+
+/* 팝업 메뉴  */
+.context-menu {
+    position: absolute;
+    top: 100%; 
+    right: 0;
+
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 1000; min-width: 90px; overflow: hidden;
+    margin-top: 4px;
+}
+
+.menu-option {
+    padding: 6px 10px; font-size: 11px;
+    color: #ff6b6b; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    transition: background 0.2s;
+}
+.menu-option:hover { background-color: var(--bg-input); }
+
+/* 하단 푸터 */
+.sidebar-footer {
+    margin-top: auto; padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.theme-toggle-wrapper {
+    display: flex; align-items: center; cursor: pointer;
+    gap: 10px; padding: 5px; border-radius: 8px;
+    transition: background 0.2s;
+}
+.theme-toggle-wrapper:hover { background-color: var(--bg-input); }
+
+.theme-toggle-track {
+    width: 44px; height: 24px; border-radius: 12px; position: relative; transition: background 0.3s;
+}
+.theme-toggle-track.dark { background-color: #4a4a60; }
+.theme-toggle-track.light { background-color: #cbd5e1; }
+
+.theme-toggle-thumb {
+    width: 20px; height: 20px; background-color: white;
+    border-radius: 50%; position: absolute; top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.theme-toggle-track.dark .theme-toggle-thumb { transform: translateX(22px); }
+.theme-toggle-track.light .theme-toggle-thumb { transform: translateX(2px); }
+
+.theme-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }

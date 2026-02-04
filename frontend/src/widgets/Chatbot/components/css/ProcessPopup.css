@@ -1,0 +1,177 @@
+/* 1. 기본 테마 (다크 모드 기준) 변수 정의 */
+.process-popup {
+    --pp-bg: rgba(30, 30, 46, 0.95);
+    --pp-header-bg: rgba(255, 255, 255, 0.05);
+    --pp-border: rgba(255, 255, 255, 0.15);
+    --pp-text: #e0e0e0;
+    --pp-title: #ffffff;
+    --pp-shadow: rgba(0, 0, 0, 0.5);
+    --pp-btn-hover: rgba(255, 255, 255, 0.1);
+    --pp-btn-text: #a0a0a0;
+    --pp-btn-text-hover: #ffffff;
+    --pp-scroll-thumb: rgba(255, 255, 255, 0.2);
+    --pp-code-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* 2. 라이트 모드 오버라이드  */
+.process-popup[data-theme="light"] {
+    /* 라이트 모드 색상 */
+    --pp-bg: rgba(255, 255, 255, 0.95);
+    --pp-header-bg: rgba(0, 0, 0, 0.03);
+    --pp-border: rgba(0, 0, 0, 0.1);
+    --pp-text: #333333;
+    --pp-title: #1a1a1a;
+    --pp-shadow: rgba(0, 0, 0, 0.15);
+    --pp-btn-hover: rgba(0, 0, 0, 0.05);
+    --pp-btn-text: #666666;
+    --pp-btn-text-hover: #000000;
+    --pp-scroll-thumb: rgba(0, 0, 0, 0.2);
+    --pp-code-bg: #f5f5f5;
+}
+
+/* 3. 팝업 컨테이너 */
+.process-popup {
+    position: fixed !important;
+    z-index: 2147483647 !important;
+    background: var(--pp-bg) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--pp-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 15px 50px var(--pp-shadow) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    min-width: 300px !important;
+    min-height: 200px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    transition: background 0.3s, border-color 0.3s !important;
+}
+
+/* 헤더 */
+.popup-header {
+    padding: 12px 16px !important;
+    background: var(--pp-header-bg) !important;
+    border-bottom: 1px solid var(--pp-border) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    cursor: grab !important;
+    user-select: none !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    box-sizing: border-box !important;
+}
+.popup-header:active { cursor: grabbing !important; }
+
+.popup-title-area {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--pp-title) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+.popup-icon {
+    display: flex !important;
+    align-items: center !important;
+    color: #667eea !important;
+}
+
+.popup-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+/* 아이콘 버튼 */
+.icon-btn {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--pp-btn-text) !important;
+    padding: 6px 10px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    font-size: 12px !important;
+    height: 30px !important;
+    box-sizing: border-box !important;
+}
+
+.icon-btn:hover {
+    background: var(--pp-btn-hover) !important;
+    color: var(--pp-btn-text-hover) !important;
+}
+
+.icon-btn.close:hover {
+    background: rgba(255, 82, 82, 0.15) !important;
+    color: #ff5252 !important;
+}
+
+.icon-btn.copy:hover {
+    background: rgba(102, 126, 234, 0.15) !important;
+    color: #667eea !important;
+}
+
+.icon-btn svg {
+    width: 14px !important;
+    height: 14px !important;
+    display: block !important;
+}
+
+/* 본문 영역 */
+.popup-body {
+    flex: 1 !important;
+    padding: 20px !important;
+    overflow-y: auto !important;
+    color: var(--pp-text) !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    cursor: auto !important;
+    text-align: left !important;
+}
+
+/* 🔥 스크롤바 커스텀 (트랙 투명화) */
+.popup-body::-webkit-scrollbar {
+    width: 6px !important;
+}
+.popup-body::-webkit-scrollbar-track {
+    background: transparent !important; /* 배경 지움 */
+}
+.popup-body::-webkit-scrollbar-thumb {
+    background: var(--pp-scroll-thumb) !important;
+    border-radius: 3px !important;
+}
+.popup-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.5) !important;
+}
+
+/* 리사이즈 핸들 */
+.resizer-handle {
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    cursor: nwse-resize !important;
+    z-index: 10 !important;
+}
+.resizer-handle::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 4px !important;
+    right: 4px !important;
+    width: 8px !important;
+    height: 8px !important;
+    border-right: 2px solid var(--pp-border) !important;
+    border-bottom: 2px solid var(--pp-border) !important;
+}
