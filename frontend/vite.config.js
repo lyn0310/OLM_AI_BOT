@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, path.resolve(process.cwd(), '..'), '')
 
   // 백엔드 주소 설정
-  const apiTarget = env.VITE_API_TARGET || 'http://olm-backend:8050';
+  const apiTarget = env.VITE_API_TARGET || 'http://localhost:8095';
 
   console.log(`[Vite Config] API 연결 타겟: ${apiTarget}`);
 
@@ -37,7 +37,6 @@ export default defineConfig(({ mode }) => {
         'sfolm.iptime.org',
         'localhost',
         '192.168.0.10',
-        '121.167.219.226'
       ],
       cors: {
         origin: "*",
@@ -58,11 +57,20 @@ export default defineConfig(({ mode }) => {
           secure: false,
         },
         '/docs': {
-          target: 'http://olm-backend:8050',
+          target: apiTarget,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/docs/, '/swagger-ui/index.html'),
+        },
+        '/swagger-ui': {
+          target: apiTarget,
+          changeOrigin: true,
+        },
+        '/v3/api-docs': {
+          target: apiTarget,
           changeOrigin: true,
         },
         '/openapi.json': {
-          target: 'http://olm-backend:8050',
+          target: apiTarget,
           changeOrigin: true,
         },
         '/viewer': {
@@ -72,9 +80,9 @@ export default defineConfig(({ mode }) => {
           ws: true,
         },
         '/healthz': {
-            target: 'http://olm-db-viewer:8501',
-            changeOrigin: true,
-            secure: false, 
+          target: 'http://olm-db-viewer:8501',
+          changeOrigin: true,
+          secure: false,
         },
         '/browser': {
           target: 'http://olm-neo4j:7474',

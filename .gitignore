@@ -32,3 +32,9 @@ nginx/logs/
 
 # 기타
 *.log
+
+# volumes
+/volumes/ 
+/volumes/** 
+**/.minio.sys/** 
+**/*.wal

@@ -1,0 +1,4 @@
+/volumes/ 
+/volumes/** 
+**/.minio.sys/** 
+**/*.wal

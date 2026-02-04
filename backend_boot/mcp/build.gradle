@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.xbolt'
+version = '0.0.1-SNAPSHOT'
+description = 'mcp'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    //WebClient 사용
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    //Jsoup
+    implementation 'org.jsoup:jsoup:1.16.1'
+
+    //Spring AI core
+    implementation 'org.springframework.ai:spring-ai-openai:1.0.1'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai:1.0.1'
+
+    //Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0'
+
+    //Milvus
+    implementation 'io.milvus:milvus-sdk-java:2.5.12'
+
+    //Neo4j
+    implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JPA & H2
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2'
+}
+
+springBoot {
+    mainClass = 'com.xbolt.mcp.McpApplication'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

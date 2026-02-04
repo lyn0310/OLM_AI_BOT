@@ -31,6 +31,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8060", 
         "http://sfolm.iptime.org:8060/",
+        "http://localhost:8095", 
+        "http://sfolm.iptime.org:8095/",
     ],
     allow_credentials=True,
     allow_methods=["*"],
