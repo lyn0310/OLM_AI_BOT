@@ -60,7 +60,7 @@ services:
       - ./backend:/app
       - ./dataset:/app/dataset
       - ./database:/app/database
-    command: uvicorn app.api:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload
     depends_on:
       neo4j:
         condition: service_healthy

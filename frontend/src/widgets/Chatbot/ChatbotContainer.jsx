@@ -18,7 +18,7 @@ const ChatbotContainer = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
-    
+
     const [windowState, setWindowState] = useState({
         x: window.innerWidth - (DEFAULT_W + 20),
         y: window.innerHeight - (DEFAULT_H + 50),
@@ -27,7 +27,7 @@ const ChatbotContainer = () => {
     });
 
     const [isMaximized, setIsMaximized] = useState(false);
-    const prevWindowState = useRef(null); 
+    const prevWindowState = useRef(null);
     const requestRef = useRef();
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -44,14 +44,22 @@ const ChatbotContainer = () => {
     const containerRef = useRef(null);
     const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, initialLeft: 0, initialTop: 0 });
     const resizeRef = useRef({ isResizing: false, direction: '', startX: 0, startY: 0, initialW: 0, initialH: 0, initialX: 0, initialY: 0 });
-    
+
     const [popupData, setPopupData] = useState(null);
 
     const fetchSessions = async () => {
         try {
             const res = await axios.get(`${API_BASE_URL}/sessions`);
-            setSessions(res.data);
-        } catch (e) { console.error(e); }
+            if (Array.isArray(res.data)) {
+                setSessions(res.data);
+            } else {
+                console.warn("Invalid sessions data format:", res.data);
+                setSessions([]);
+            }
+        } catch (e) {
+            console.error("Failed to fetch sessions:", e);
+            setSessions([]);
+        }
     };
 
     useEffect(() => { if (isOpen) fetchSessions(); }, [isOpen]);
@@ -61,9 +69,17 @@ const ChatbotContainer = () => {
         setIsLoading(true);
         try {
             const res = await axios.get(`${API_BASE_URL}/sessions/${id}`);
-            setMessages(res.data);
+            if (Array.isArray(res.data)) {
+                setMessages(res.data);
+            } else {
+                console.warn("Invalid messages format:", res.data);
+                setMessages([]);
+            }
             setGraphData({ nodes: [], links: [] });
-        } catch (e) { console.error(e); } finally { setIsLoading(false); }
+        } catch (e) {
+            console.error("Failed to load session:", e);
+            setMessages([]);
+        } finally { setIsLoading(false); }
     };
 
     const handleNewChat = () => {
@@ -106,16 +122,16 @@ const ChatbotContainer = () => {
                 width: DEFAULT_W,
                 height: DEFAULT_H
             });
-            setIsSidebarOpen(false); 
+            setIsSidebarOpen(false);
             setIsMaximized(false);
         } else {
-            prevWindowState.current = { ...windowState }; 
+            prevWindowState.current = { ...windowState };
             const targetWidth = window.innerWidth * (2 / 3);
             const targetHeight = window.innerHeight * (2 / 3);
             const targetX = (window.innerWidth - targetWidth) / 2;
             const targetY = (window.innerHeight - targetHeight) / 2;
             setWindowState({ x: targetX, y: targetY, width: targetWidth, height: targetHeight });
-            if (!isSidebarOpen) setIsSidebarOpen(true); 
+            if (!isSidebarOpen) setIsSidebarOpen(true);
             setIsMaximized(true);
         }
     };
@@ -188,22 +204,22 @@ const ChatbotContainer = () => {
     const startDrag = (e) => {
         if (!isOpen) return;
         setIsDragging(true);
-        dragRef.current = { 
-            isDragging: true, 
-            startX: e.clientX, 
-            startY: e.clientY, 
-            initialLeft: windowState.x, 
-            initialTop: windowState.y 
+        dragRef.current = {
+            isDragging: true,
+            startX: e.clientX,
+            startY: e.clientY,
+            initialLeft: windowState.x,
+            initialTop: windowState.y
         };
     };
 
     const startResize = (e, direction) => {
         e.stopPropagation(); e.preventDefault();
         setIsResizing(true);
-        resizeRef.current = { 
-            isResizing: true, direction, startX: e.clientX, startY: e.clientY, 
-            initialW: windowState.width, initialH: windowState.height, 
-            initialX: windowState.x, initialY: windowState.y 
+        resizeRef.current = {
+            isResizing: true, direction, startX: e.clientX, startY: e.clientY,
+            initialW: windowState.width, initialH: windowState.height,
+            initialX: windowState.x, initialY: windowState.y
         };
     };
 
@@ -225,12 +241,12 @@ const ChatbotContainer = () => {
     return (
         <>
             {(isDragging || isResizing) && <div className="interaction-overlay" />}
-            <div 
+            <div
                 className={`chat-window ${isOpen ? 'open' : 'closed'} ${isDevMode ? 'dev-mode' : ''} ${(isDragging || isResizing) ? 'dragging' : ''}`}
-                style={{ 
-                    left: isOpen ? `${windowState.x}px` : 'auto', 
-                    top: isOpen ? `${windowState.y}px` : 'auto', 
-                    width: `${windowState.width}px`, 
+                style={{
+                    left: isOpen ? `${windowState.x}px` : 'auto',
+                    top: isOpen ? `${windowState.y}px` : 'auto',
+                    width: `${windowState.width}px`,
                     height: `${windowState.height}px`,
                     position: 'fixed'
                 }}
@@ -240,24 +256,24 @@ const ChatbotContainer = () => {
             >
                 {/* 헤더 영역 클릭 시 드래그 시작 */}
                 <div onMouseDown={startDrag}>
-                    <ChatHeader 
-                        onClose={() => setIsOpen(false)} 
-                        onClear={handleNewChat} 
-                        isDevMode={isDevMode} 
+                    <ChatHeader
+                        onClose={() => setIsOpen(false)}
+                        onClear={handleNewChat}
+                        isDevMode={isDevMode}
                         onDevModeToggle={() => {
                             console.log("DEV 모드 토글 실행");
                             setIsDevMode(!isDevMode);
-                        }} 
-                        isSidebarOpen={isSidebarOpen} 
+                        }}
+                        isSidebarOpen={isSidebarOpen}
                         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-                        isMaximized={isMaximized} 
+                        isMaximized={isMaximized}
                         onToggleMaximize={handleToggleMaximize}
                     />
                 </div>
-                
+
                 <div className="chat-body-wrapper">
                     <div className={`sidebar-wrapper ${isSidebarOpen ? 'expanded' : 'collapsed'}`}>
-                        <ChatSidebar 
+                        <ChatSidebar
                             sessions={sessions} currentSessionId={sessionId} onSelectSession={handleSelectSession} onNewChat={handleNewChat} onSessionsUpdate={fetchSessions}
                             theme={theme} toggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                         />
@@ -267,13 +283,13 @@ const ChatbotContainer = () => {
                             <MessageList messages={messages} isLoading={isLoading} />
                             <ChatInput input={input} setInput={setInput} onSendMessage={sendMessage} isLoading={isLoading} />
                         </div>
-                        
+
                         {isDevMode && (
                             <div className="graph-section">
-                                <GraphVisualizer 
-                                    graphData={graphData} 
-                                    theme={theme} 
-                                    onNodeClick={handleNodeClick} 
+                                <GraphVisualizer
+                                    graphData={graphData}
+                                    theme={theme}
+                                    onNodeClick={handleNodeClick}
                                 />
                             </div>
                         )}
@@ -285,15 +301,15 @@ const ChatbotContainer = () => {
             </div>
 
             {popupData && (
-                <ProcessPopup 
+                <ProcessPopup
                     content={popupData.content}
                     position={popupData.position}
-                    onClose={() => setPopupData(null)} 
+                    onClose={() => setPopupData(null)}
                     theme={theme}
                 />
             )}
 
-            {!isOpen && <div className="widget-launcher-pos" onClick={() => setIsOpen(true)}><ChatLauncher isOpen={isOpen} toggleChat={() => {}} /></div>}
+            {!isOpen && <div className="widget-launcher-pos" onClick={() => setIsOpen(true)}><ChatLauncher isOpen={isOpen} toggleChat={() => { }} /></div>}
         </>
     );
 };
