@@ -1,0 +1,9 @@
+# Dockerfile.viewer
+FROM python:3.10-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir streamlit chromadb pandas
+
+# 포트 노출
+EXPOSE 8501
