@@ -3,9 +3,9 @@ import os
 from openai import OpenAI
 from pptx import Presentation
 from urllib.parse import quote
-from .config import API_KEY, MODEL_EMBEDDING, API_BASE_URL
+from .config import API_KEY, LLM_BASE_URL, MODEL_EMBEDDING_PASSAGE, API_BASE_URL
 
-client = OpenAI(api_key=API_KEY.strip())
+client = OpenAI(api_key=API_KEY.strip(), base_url=LLM_BASE_URL)
 
 # ==========================================
 # 1. 임베딩 및 텍스트 유틸리티
@@ -14,7 +14,7 @@ def get_embedding(text):
     text = text.replace("\n", " ")
     if not text.strip(): return []
     try:
-        return client.embeddings.create(input=[text], model=MODEL_EMBEDDING).data[0].embedding
+        return client.embeddings.create(input=[text], model=MODEL_EMBEDDING_PASSAGE).data[0].embedding
     except: return []
 
 def chunk_text(text, chunk_size=1000, overlap=100):

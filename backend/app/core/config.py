@@ -48,10 +48,13 @@ else:
     API_BASE_URL = "http://localhost:8050/api"
 
 # --- 2. 모델 및 DB 설정 ---
-API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+API_KEY = os.getenv("UPSTAGE_API_KEY", "").strip()
+LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.upstage.ai/v1")
 
-MODEL_EMBEDDING = "text-embedding-3-small"
-MODEL_CHAT = "gpt-4o-mini"
+# Upstage 임베딩은 문서 저장용(passage)과 검색 질의용(query) 모델이 분리되어 있음
+MODEL_EMBEDDING_PASSAGE = os.getenv("MODEL_EMBEDDING_PASSAGE", "embedding-passage")
+MODEL_EMBEDDING_QUERY = os.getenv("MODEL_EMBEDDING_QUERY", "embedding-query")
+MODEL_CHAT = os.getenv("MODEL_CHAT", "solar-pro2")
 
 # Neo4j 설정
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")

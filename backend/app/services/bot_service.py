@@ -7,7 +7,7 @@ from .intent_router import IntentRouter
 
 from langchain_neo4j import Neo4jGraph
 from langchain_openai import ChatOpenAI
-from ..core.config import API_KEY, DATABASE_DIR, MODEL_CHAT, MODEL_EMBEDDING, NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
+from ..core.config import API_KEY, LLM_BASE_URL, DATABASE_DIR, MODEL_CHAT, MODEL_EMBEDDING_QUERY, NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 import logging
 
 logging.getLogger("langchain").setLevel(logging.WARNING)
@@ -15,7 +15,7 @@ logging.getLogger("langchain_community").setLevel(logging.WARNING)
 logging.getLogger("langchain_openai").setLevel(logging.WARNING)
 
 logging.getLogger("neo4j").setLevel(logging.ERROR)
-client = OpenAI(api_key=API_KEY.strip())
+client = OpenAI(api_key=API_KEY.strip(), base_url=LLM_BASE_URL)
 
 class UnifiedRAGChatBot:
     def __init__(self):
@@ -24,7 +24,7 @@ class UnifiedRAGChatBot:
             self.graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
             self.graph.refresh_schema()
 
-            llm = ChatOpenAI(model=MODEL_CHAT, api_key=API_KEY, temperature=0)
+            llm = ChatOpenAI(model=MODEL_CHAT, api_key=API_KEY, base_url=LLM_BASE_URL, temperature=0)
 
             self.PATH_CYPHER_TEMPLATE = """
             You are a Neo4j Cypher generator for PATH queries ONLY.
@@ -117,7 +117,7 @@ class UnifiedRAGChatBot:
         return None
 
     def get_embedding(self, text):
-        return client.embeddings.create(input=[text.replace("\n", " ")], model=MODEL_EMBEDDING).data[0].embedding
+        return client.embeddings.create(input=[text.replace("\n", " ")], model=MODEL_EMBEDDING_QUERY).data[0].embedding
 
     def _extract_active_context(self, chat_history):
         if not chat_history: return None
