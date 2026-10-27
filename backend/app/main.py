@@ -28,11 +28,14 @@ app = FastAPI(lifespan=lifespan)
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
+    # 브라우저가 보내는 Origin 에는 끝에 '/' 가 없으므로 붙이지 않는다
     allow_origins=[
-        "http://localhost:8060", 
-        "http://sfolm.iptime.org:8060/",
-        "http://localhost:8095", 
-        "http://sfolm.iptime.org:8095/",
+        "http://localhost:8060",
+        "http://sfolm.iptime.org:8060",
+        "http://192.168.0.10:8060",
+        "http://localhost:8095",
+        "http://sfolm.iptime.org:8095",
+        "http://192.168.0.10:8095",
     ],
     allow_credentials=True,
     allow_methods=["*"],
