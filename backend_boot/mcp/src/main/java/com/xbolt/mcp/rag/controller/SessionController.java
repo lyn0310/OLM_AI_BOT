@@ -2,7 +2,7 @@ package com.xbolt.mcp.rag.controller;
 
 import com.xbolt.mcp.rag.domain.Message;
 import com.xbolt.mcp.rag.domain.Session;
-import com.xbolt.mcp.rag.service.HistoryService;
+import com.xbolt.mcp.rag.service.History.HistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package com.xbolt.mcp.rag.controller;
 import com.xbolt.mcp.rag.dto.ChatRequest;
 import com.xbolt.mcp.rag.dto.ChatResponse;
 import com.xbolt.mcp.rag.service.ChatService;
-import com.xbolt.mcp.rag.service.HistoryService;
+import com.xbolt.mcp.rag.service.History.HistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

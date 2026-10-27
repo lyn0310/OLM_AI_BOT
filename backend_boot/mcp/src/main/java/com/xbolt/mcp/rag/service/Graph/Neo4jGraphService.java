@@ -178,5 +178,30 @@ public class Neo4jGraphService {
             log.error("Neo4j getGraphVisualData error", e);
             return Map.of("nodes", List.of(), "links", List.of());
         }
+
+    }
+
+    public Map<String, Object> executePathQuery(String cypher, Map<String, Object> params) {
+        log.info("Executing Dynamic Path Query: {}", cypher);
+        try (var session = driver.session()) {
+            var result = session.run(cypher, params);
+            if (result.hasNext()) {
+                // The query is expected to return `ns` (nodes list) and `rs` (rels list) due to
+                // `wrapPathCypher`
+                var record = result.next();
+                List<Map<String, Object>> ns = record.get("ns").asList(v -> v.asMap());
+                List<Map<String, Object>> rs = record.get("rs").asList(v -> v.asMap());
+
+                return Map.of("nodes", ns, "links", rs);
+            }
+            return Map.of("nodes", List.of(), "links", List.of());
+        } catch (Exception e) {
+            log.error("Dynamic Path Query Error", e);
+            return Map.of("nodes", List.of(), "links", List.of());
+        }
+    }
+
+    public String getSchema() {
+        return "Node labels: [Process]\nRelationship types: [RELATED_TO]\nProperty keys: [id, name, content]";
     }
 }

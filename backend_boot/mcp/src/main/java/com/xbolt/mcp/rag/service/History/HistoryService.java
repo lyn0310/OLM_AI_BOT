@@ -1,4 +1,4 @@
-package com.xbolt.mcp.rag.service;
+package com.xbolt.mcp.rag.service.History;
 
 import com.xbolt.mcp.rag.domain.Message;
 import com.xbolt.mcp.rag.domain.Session;
