@@ -155,15 +155,25 @@ curl -X POST "http://localhost:8095/api/build?target=all"
 3. 새 서버에서 `docker compose up -d`
 4. Neo4j 비밀번호는 **복사한 `neo4j_data` 의 비밀번호**가 유지되므로, 새 서버 `.env` 의 `NEO4J_PASSWORD` 를 기존 값과 맞춰야 합니다.
 
-### (선택) Neo4j 인덱스
-현재 운영 DB 에는 아래 인덱스가 있으나 코드가 자동으로 만들지 않습니다. 노드 수가 적어(약 700개) 없어도 동작하지만, 데이터가 늘면 생성을 권장합니다.
+### (선택) Neo4j 제약조건 · 인덱스
+개발 PC 의 Neo4j 에는 아래 제약조건 2개와 인덱스 2개가 있으나, 코드가 자동으로 만들지 않습니다. 노드 수가 적어(약 700개) 없어도 동작하지만, 같은 구성을 원하면 생성하세요.
+(`/api/build` 는 노드만 지우고 제약조건·인덱스는 지우지 않으므로 한 번만 만들면 됩니다.)
+
+| 이름 | 종류 | 대상 |
+|---|---|---|
+| `process_id` | UNIQUE 제약조건 (+ RANGE 인덱스 자동 생성) | `Process.id` (Global Key) |
+| `attr_id` | UNIQUE 제약조건 (+ RANGE 인덱스 자동 생성) | `Attribute.id` |
+| `process_display_id_idx` | RANGE 인덱스 | `Process.display_id` |
+| `process_name_idx` | FULLTEXT 인덱스 | `Process.name`, `Process.id` |
+
 Neo4j 브라우저(`http://<서버>:7474`)에서 실행:
 ```cypher
-CREATE INDEX process_id IF NOT EXISTS FOR (n:Process) ON (n.id);
+CREATE CONSTRAINT process_id IF NOT EXISTS FOR (n:Process) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT attr_id IF NOT EXISTS FOR (n:Attribute) REQUIRE n.id IS UNIQUE;
 CREATE INDEX process_display_id_idx IF NOT EXISTS FOR (n:Process) ON (n.display_id);
-CREATE INDEX attr_id IF NOT EXISTS FOR (n:Attribute) ON (n.id);
 CREATE FULLTEXT INDEX process_name_idx IF NOT EXISTS FOR (n:Process) ON EACH [n.name, n.id];
 ```
+확인: `SHOW CONSTRAINTS;` / `SHOW INDEXES;`
 
 ---
 
