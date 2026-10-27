@@ -85,8 +85,8 @@ BACKEND_PORT=8095
 UPSTAGE_API_KEY=up_xxxxxxxxxxxxxxxx
 NEO4J_PASSWORD=원하는비밀번호
 
-# 프론트엔드가 호출할 백엔드 주소 (브라우저 기준 주소)
-VITE_API_URL=http://<서버주소>:8095/api
+# 프론트엔드가 호출할 API 주소 = "프론트엔드 주소 + /api" (예: http://sfolm.iptime.org:8060/api)
+VITE_API_URL=http://<서버주소>:8060/api
 
 # (선택) 답변 모델 변경. 생략 시 solar-pro2
 # MODEL_CHAT=solar-pro4
@@ -96,7 +96,7 @@ VITE_API_URL=http://<서버주소>:8095/api
 |---|---|
 | `UPSTAGE_API_KEY` | 필수. 없으면 답변/검색 모두 실패 |
 | `NEO4J_PASSWORD` | Neo4j 최초 기동 시 이 비밀번호로 계정 생성. **`neo4j_data/` 가 이미 있으면 기존 비밀번호가 유지**됨 |
-| `VITE_API_URL` | 사용자 브라우저에서 접근 가능한 백엔드 주소. `localhost` 로 두면 다른 PC 에서 접속 시 동작 안 함 |
+| `VITE_API_URL` | **사용자가 접속하는 프론트엔드 주소 + `/api`** (배포 서버: `http://sfolm.iptime.org:8060/api`). 프론트엔드(Vite)가 `/api` 요청을 백엔드로 넘겨주므로 CORS 가 발생하지 않음. `http://localhost:8095/api` 처럼 백엔드를 직접 가리키면 다른 PC 에서 접속 시 CORS 에러. 변경 후 `docker compose up -d --force-recreate frontend` |
 | `MODEL_CHAT` | 선택. 사용 가능한 모델 목록 확인: `curl https://api.upstage.ai/v1/models -H "Authorization: Bearer <키>"` |
 
 ### 3-3. 서버별로 바꿔야 하는 설정
