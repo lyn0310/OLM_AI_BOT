@@ -398,6 +398,10 @@ class UnifiedRAGChatBot:
         # 3. [Graph Search] 확정된 ID로 쿼리 실행
         mode = self._detect_path_mode(user_input)
 
+        # "A와 B는 어떻게 연결/관계" 처럼 두 대상이 분리된 질문도 경로 탐색
+        if mode == "none" and a_term and b_term and any(k in user_input for k in ["연결", "관계"]):
+            mode = "shortest"
+
         if current_route in ("graph", "both") and len(vector_items) >= 2 and mode != "none":
             id1 = vector_items[0]["id"]  # GlobalKey
             id2 = vector_items[1]["id"]  # GlobalKey
@@ -444,6 +448,8 @@ class UnifiedRAGChatBot:
 
                 cypher = self._generate_path_cypher(question=gen_question, mode=mode)
                 exec_cypher = self._wrap_path_cypher(cypher)
+                # 가변 길이 관계(*..n)에는 파라미터를 쓸 수 없으므로 숫자로 치환
+                exec_cypher = re.sub(r"\*(\d*)\s*\.\.\s*\$maxHops", lambda m: f"*{m.group(1)}..{params['maxHops']}", exec_cypher)
                 print("DEBUG cypher =", exec_cypher)
 
                 self._validate_path_cypher(exec_cypher)
