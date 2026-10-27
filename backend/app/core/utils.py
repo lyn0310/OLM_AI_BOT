@@ -7,11 +7,14 @@ from .config import API_KEY, LLM_BASE_URL, MODEL_EMBEDDING_PASSAGE, API_BASE_URL
 
 client = OpenAI(api_key=API_KEY.strip(), base_url=LLM_BASE_URL)
 
+# Upstage 임베딩 입력 한도는 4000 토큰 (한글 기준 약 1.8자/토큰) -> 여유 있게 글자 수로 자름
+MAX_EMBEDDING_CHARS = 5000
+
 # ==========================================
 # 1. 임베딩 및 텍스트 유틸리티
 # ==========================================
 def get_embedding(text):
-    text = text.replace("\n", " ")
+    text = text.replace("\n", " ")[:MAX_EMBEDDING_CHARS]
     if not text.strip(): return []
     try:
         return client.embeddings.create(input=[text], model=MODEL_EMBEDDING_PASSAGE).data[0].embedding
