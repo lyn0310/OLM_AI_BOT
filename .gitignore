@@ -45,3 +45,5 @@ nginx/logs/
 /volumes/** 
 **/.minio.sys/** 
 **/*.wal
+# Chroma 벡터 DB / 채팅 기록 (실행 중 생성, /api/build 로 재생성)
+database/

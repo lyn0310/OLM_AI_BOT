@@ -1,0 +1,2 @@
+# dataset 문서는 줄바꿈 변환 없이 그대로 저장 (autocrlf 로 인한 가짜 변경 방지)
+dataset/** -text
